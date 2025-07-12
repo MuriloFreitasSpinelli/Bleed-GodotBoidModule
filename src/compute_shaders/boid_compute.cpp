@@ -49,19 +49,44 @@ BoidCompute::~BoidCompute() {
 }
 
 
-PackedByteArray BoidCompute::_int32_to_packed_byte_array(std::vector<uint32_t> array)
-{
-	return PackedByteArray();
+PackedByteArray BoidCompute::_int32_to_packed_byte_array(const std::vector<uint32_t>& p_array) {
+	PackedByteArray bytes;
+	if (p_array.empty()) { 
+		return bytes; // return empty PackedByteArray
+	}
+
+	const int64_t byte_count = static_cast<int64_t>(p_array.size()) * sizeof(uint32_t);
+	bytes.resize(byte_count);
+
+	// Copy the whole buffer in one pass – PackedByteArray guarantees contiguous memory.
+	std::memcpy(bytes.ptrw(), p_array.data(), byte_count);
+	return bytes;
 }
 
-PackedByteArray BoidCompute::_vector2_to_packed_byte_array(std::vector<Vector2> array)
-{
-	return PackedByteArray();
+
+PackedByteArray BoidCompute::_float_to_packed_byte_array(const std::vector<float>& p_array) {
+	PackedByteArray bytes;
+	if (p_array.empty()) {
+		return bytes;
+	}
+
+	const int64_t byte_count = static_cast<int64_t>(p_array.size()) * sizeof(float);
+	bytes.resize(byte_count);
+	std::memcpy(bytes.ptrw(), p_array.data(), byte_count);
+	return bytes;
 }
 
-PackedByteArray BoidCompute::_float_to_packed_byte_array(std::vector<float_t> array)
-{
-	return PackedByteArray();
+
+PackedByteArray BoidCompute::_vector2_to_packed_byte_array(const std::vector<Vector2>& p_array) {
+	PackedByteArray bytes;
+	if (p_array.empty()) {
+		return bytes;
+	}
+
+	const int64_t byte_count = static_cast<int64_t>(p_array.size()) * sizeof(Vector2);
+	bytes.resize(byte_count);
+	std::memcpy(bytes.ptrw(), p_array.data(), byte_count);
+	return bytes;
 }
 
 // TODO : If after profiling if these buffer updates and data to byte is expensive... 
